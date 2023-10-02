@@ -13,7 +13,7 @@ afterAll(() => {
 })
 
 describe('GET /api', () => {
-    test('Bad sends back 200 and the read json api file', () => {
+    test('Sends back 200 and the read json api file', () => {
         return request(app).get('/api').expect(200).then(({body}) => {
             for(const api in body['API']) {
                 expect(body['API'][api]).toEqual(expect.objectContaining({
