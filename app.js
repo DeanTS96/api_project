@@ -1,6 +1,8 @@
 const express = require('express');
 const {getTopics} = require('./controllers/topics.controllers');
-const getAPIs = require('./controllers/api_docs.controllers')
+const {getAPIDocs} = require('./controllers/api_docs.controllers')
+
+console.log(getAPIDocs);
 
 const app = express();
 
@@ -8,9 +10,9 @@ app.get('/api/topics', getTopics);
 
 app.get('/api', getAPIDocs);
 
-app.use((req, res, next) => {
+app.all('/*', (req, res, next) => {
     console.log('my error')
-    res.status(400).send({msg: 'Bad api endpoint'});
+    res.status(404).send({msg: 'Bad api endpoint'});
 })
 
 module.exports = app;
