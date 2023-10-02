@@ -13,8 +13,8 @@ afterAll(() => {
 })
 
 describe('GET topicccccs', () => {
-    test('Bad sends back 400 and Bad api endpoint', () => {
-        return request(app).get('/api/topicccccs').expect(400).then(({body}) => {
+    test('Bad sends back 404 and Bad api endpoint', () => {
+        return request(app).get('/api/topicccccs').expect(404).then(({body}) => {
             expect(body.msg).toBe('Bad api endpoint');
         });
     })
