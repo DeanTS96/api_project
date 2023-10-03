@@ -16,7 +16,7 @@ describe('/api/articles/:article_id/comments', () => {
     test('GET /api/articles/:article_id/comments', () => {
         return request(app).get('/api/articles/3/comments').expect(200).then(({body: comments}) => {
             expect(comments.comments).toHaveLength(2);
-            //expect(comments.comments).toBeSortedBy('created_at', {descending: true});
+            expect(comments.comments).toBeSortedBy('created_at', {descending: true});
             console.log(comments);
             comments.comments.forEach(comment => {
                 expect(comment).toEqual(expect.objectContaining({
