@@ -34,11 +34,10 @@ describe('topics', () => {
 })
 
 describe('/api/articles/:article_id/comments', () => {
-    test('GET /api/articles/:article_id/comments', () => {
+    test('200: GET /api/articles/:article_id/comments responds status 200 with an array of comment objects for a specific article, ordered last comment first', () => {
         return request(app).get('/api/articles/3/comments').expect(200).then(({body: comments}) => {
             expect(comments.comments).toHaveLength(2);
             expect(comments.comments).toBeSortedBy('created_at', {descending: true});
-            console.log(comments);
             comments.comments.forEach(comment => {
                 expect(comment).toEqual(expect.objectContaining({
                     comment_id: expect.any(Number),
@@ -50,6 +49,21 @@ describe('/api/articles/:article_id/comments', () => {
                 }))
             })
         });
+    })
+    test('200: GET /api/articles/:article_id/comments responds with status code 200 and returns an empty array when there are no comments for that article', () => {
+        return request(app).get('/api/articles/2/comments').expect(200).then(({body: comments}) => {
+            expect(comments.comments).toHaveLength(0);
+        });
+    })
+    test('404: GET /api/articles/99999/comments responds with status 404 article doesn\'t exists', () => {
+        return request(app).get('/api/articles/99999/comments').expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('article doesn\'t exist');
+        })
+    })
+    test('400: GET /api/articles/invalid_article_id/comments responds with 400 invalid id', () => {
+        return request(app).get('/api/articles/invalid_id/comments').expect(400).then(({body: errResponse})=> {
+            expect(errResponse.msg).toBe('invalid id')
+        })
     })
 })
 
@@ -72,7 +86,7 @@ describe('/api/articles/:article_id', () => {
             expect(errResponse.msg).toBe('article doesn\'t exist');
         })
     })
-    test('400: GET/api/articles/invalid-article_id responds with 400 an invalid id', () => {
+    test('400: GET/api/articles/invalid_article_id responds with 400 an invalid id', () => {
         return request(app).get('/api/articles/invalid_id').expect(400).then(({body: errResponse})=> {
             expect(errResponse.msg).toBe('invalid id')
         })
