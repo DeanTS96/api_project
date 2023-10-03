@@ -65,6 +65,38 @@ describe('/api/articles/:article_id/comments', () => {
             expect(errResponse.msg).toBe('invalid id')
         })
     })
+    test('201: POST /api/articles/3/comments responds with status 201 and adds a comment to an article, sending back the posted comment', () => {
+        return request(app).post('/api/articles/3/comments').send({username: 'rogersop', body: 'nice'}).expect(201).then(({body: comment}) => {
+            expect(comment.comment).toEqual(expect.objectContaining({
+                comment_id: 19,
+                body: 'nice',
+                article_id: 3,
+                author: 'rogersop',
+                votes: 0,
+                created_at: expect.any(String)
+            }))
+        });
+    })
+    test('404: POST /api/articles/99999/comments responds with status 404 article doesn\'t exist when sent an invalid id', () => {
+        return request(app).post('/api/articles/99999/comments').send({username: 'rogersop', body: 'nice'}).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('article doesn\'t exist');
+        })
+    })
+    test('400: POST /api/articles/invalid_id/comments responds with status 400 invalid id when sent a bad id', () => {
+        return request(app).post('/api/articles/invalid_id/comments').send({username: 'rogersop', body: 'nice'}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid id');
+        })
+    })
+    test('404: POST /api/articles/3/comments responds with 404 user doesn\'t exist when sent with  user that doesn\'t exist in the database', () => {
+        return request(app).post('/api/articles/3/comments').send({username: 'dean', body: 'nice'}).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('user doesn\'t exist');
+        })
+    })
+    test('400: POST /api/articles/3/comments responds with 400 empty comment when sent with no comment', () => {
+        return request(app).post('/api/articles/3/comments').send({username: 'dean', body: ''}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('empty comment');
+        })
+    })
 })
 
 describe('/api/articles/:article_id', () => {

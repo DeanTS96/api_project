@@ -3,15 +3,18 @@ const {getTopics} = require('./controllers/topics.controllers');
 const {getAPIDocs} = require('./controllers/api_docs.controllers');
 const {getArticleById, getArticles} = require('./controllers/articles.controllers');
 const handleErrors = require('./errorsControllers/handleErrors.errors.controllers');
-const {getCommentsById} = require('./controllers/comments.controllers');
+const {getCommentsById, postCommentByArticleId} = require('./controllers/comments.controllers');
 
 const app = express();
+
+app.use(express.json());
 
 app.get('/api/topics', getTopics);
 
 app.get('/api/articles/:article_id', getArticleById);
 
 app.get('/api/articles/:article_id/comments', getCommentsById);
+app.post('/api/articles/:article_id/comments', postCommentByArticleId)
 
 app.get('/api/articles', getArticles);
 
