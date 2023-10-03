@@ -12,8 +12,8 @@ afterAll(() => {
     db.end();
 })
 
-describe('articles', () => {
-    test('GET /api/articles/3 responds with 200 and the article matching that id', () => {
+describe('/api/articles/:article_id', () => {
+    test('200: GET/api/articles/3 responds with 200 and the article matching that id', () => {
         return request(app).get('/api/articles/3').expect(200).then(({body: articleResponse}) => {
             const article = articleResponse.article;
             expect(article.article_id).toBe(3);
@@ -26,14 +26,35 @@ describe('articles', () => {
             expect(article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
         });
     })
-    test('GET /api/articles/99999 responds with 404 article doesn\'t exist', () => {
+    test('404: GET/api/articles/99999 responds with 404 article doesn\'t exist', () => {
         return request(app).get('/api/articles/99999').expect(404).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('article doesn\'t exist');
         })
     })
-    test('GET /api/articles/invalid-article_id responds with 400 ad invalid id', () => {
+    test('400: GET/api/articles/invalid-article_id responds with 400 an invalid id', () => {
         return request(app).get('/api/articles/invalid_id').expect(400).then(({body: errResponse})=> {
             expect(errResponse.msg).toBe('invalid id')
         })
+    })
+})
+
+describe('/api/articles', () => {
+    test('200 GET/api/articles responds with 200 and an arrray of all article objects', () => {
+        return request(app).get('/api/articles').expect(200).then(({body: articles}) => {
+            expect(articles.articles).toHaveLength(13);
+            expect(articles.articles).toBeSortedBy('created_at',{descending: true})
+            articles.articles.forEach(article => {
+                expect(article).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                }))
+            })
+        });
     })
 })
