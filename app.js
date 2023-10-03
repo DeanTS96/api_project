@@ -17,11 +17,11 @@ app.get('/api/articles', getArticles);
 
 app.get('/api', getAPIDocs);
 
-app.use(articlesErrors);
-
 app.all('/*', (req, res, next) => {
     console.log('my error')
     res.status(404).send({msg: 'Bad api endpoint'});
 })
+
+app.use(articlesErrors);
 
 module.exports = app;
