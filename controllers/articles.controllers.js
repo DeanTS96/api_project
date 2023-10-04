@@ -15,10 +15,11 @@ function getArticles(req, res, next) {
 }
 
 function patchArticleById(req, res, next) {
-    console.log(req.params);
-    console.log(req.body);
-    updateArticleById(req.params).then(article => {
-        res.status(200).send(article);
+    updateArticleById(req.params, req.body).then(article => {
+        res.status(200).send({article});
+    }).catch(err => {
+        console.log(err);
+        next(err);
     })
 }
 

@@ -1,6 +1,6 @@
-function calculateVotes(totalVotes, incomingVotes) {
-    if(incomingVotes < 0) return (totalVotes -= Math.abs(incomingVotes));
-    return totalVotes += incomingVotes;
+function calculateVotes(incomingVotes) {
+    if(incomingVotes < 0) return `- ${Math.abs(incomingVotes)}`;
+    return `+ ${incomingVotes}`;
 }
 
 module.exports = calculateVotes;

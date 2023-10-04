@@ -123,11 +123,35 @@ describe('/api/articles/:article_id', () => {
             expect(errResponse.msg).toBe('invalid id')
         })
     })
-    /*test.only('200: PATCH/api/articles/3 responds with status 200 and the updated article', () => {
+    test('200: PATCH/api/articles/3 responds with status 200 and the updated article', () => {
         return request(app).patch('/api/articles/3').send({inc_votes: 1}).expect(200).then(({body: article}) => {
-            console.log(article);
+            expect(article.article).toEqual(expect.objectContaining({
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: expect.any(String),
+                votes: 1,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+            }))
         });
-    })*/
+    })
+    test('404: PATCH/api/articles/99999 responds with 404 article doesn\'t exist', () => {
+        return request(app).patch('/api/articles/99999').send({inc_votes: 1}).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('article doesn\'t exist');
+        })
+    })
+    test('400: PATCH/api/articles/invalid_article_id responds with 400 invalid id', () => {
+        return request(app).patch('/api/articles/invalid_id').send({inc_votes: 1}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid id');
+        })
+    })
+    test('400: PATCH/api/articles/3 with bad inc_votes value responds with 400 inc_votes must be a number', () => {
+        return request(app).patch('/api/articles/invalid_id').send({inc_votes: 'hello'}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('inc_votes must be a number');
+        })
+    })
 })
 
 describe('/api/articles', () => {

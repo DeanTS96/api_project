@@ -106,38 +106,38 @@ describe("formatComments", () => {
 });
 
 describe.only('calculateVotes()', () => {
-  test('returns same total votes when passed 0', () => {
+  test('returns "+ 0" when passed in 0', () => {
     const input = 0;
-    const output = calculateVotes(100, input);
-    const expected = 100;
+    const output = calculateVotes(input);
+    const expected = "+ 0";
 
     expect(output).toBe(expected);
   })
-  test('returns total votes incrimented by 1 when passed in 1 as incriment value', () => {
+  test('returns "+ 1" when passed in 1', () => {
     const input = 1;
-    const output = calculateVotes(100, input);
-    const expected = 101;
+    const output = calculateVotes(input);
+    const expected = "+ 1";
 
     expect(output).toBe(expected);
   })
-  test('returns total votes incrimented by 3 when passed in 3 as incriment value', () => {
+  test('returns "+ 3" when passed in 3', () => {
     const input = 3;
-    const output = calculateVotes(100, input);
-    const expected = 103;
+    const output = calculateVotes(input);
+    const expected = "+ 3";
 
     expect(output).toBe(expected);
   })
-  test('returns total votes idecramented by 1 when passed in 1 as decrament value', () => {
+  test('returns "- 1" when passed in -1', () => {
     const input = -1;
-    const output = calculateVotes(100, input);
-    const expected = 99
+    const output = calculateVotes(input);
+    const expected = "- 1"
 
     expect(output).toBe(expected);
   })
-  test('returns total votes decramented by 3 when passed in 3 as decrament value', () => {
+  test('returns "- 3" when passed in -3', () => {
     const input = -3;
-    const output = calculateVotes(100, input);
-    const expected = 97;
+    const output = calculateVotes(input);
+    const expected = "- 3";
 
     expect(output).toBe(expected);
   })
