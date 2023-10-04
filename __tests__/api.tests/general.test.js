@@ -123,6 +123,11 @@ describe('/api/articles/:article_id', () => {
             expect(errResponse.msg).toBe('invalid id')
         })
     })
+    /*test.only('200: PATCH/api/articles/3 responds with status 200 and the updated article', () => {
+        return request(app).patch('/api/articles/3').send({inc_votes: 1}).expect(200).then(({body: article}) => {
+            console.log(article);
+        });
+    })*/
 })
 
 describe('/api/articles', () => {
@@ -157,11 +162,5 @@ describe('GET /api', () => {
                 }))
             }
         });
-    })
-})
-
-describe('checkArticleExists()', () => {
-    test('returns an article from the database if it exists', () => {
-
     })
 })

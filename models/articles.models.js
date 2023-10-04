@@ -15,6 +15,10 @@ function fetchArticles() {
     })
 }
 
-module.exports = {fetchArticleById, fetchArticles};
+function updateArticleById() {
+
+}
+
+module.exports = {fetchArticleById, fetchArticles, updateArticleById};
 
 

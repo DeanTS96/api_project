@@ -4,6 +4,8 @@ const {
   formatComments,
 } = require("../db/seeds/utils");
 
+const calculateVotes = require('../utils/calculate_votes');
+
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
     const timestamp = 1557572706232;
@@ -102,3 +104,41 @@ describe("formatComments", () => {
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
   });
 });
+
+describe.only('calculateVotes()', () => {
+  test('returns same total votes when passed 0', () => {
+    const input = 0;
+    const output = calculateVotes(100, input);
+    const expected = 100;
+
+    expect(output).toBe(expected);
+  })
+  test('returns total votes incrimented by 1 when passed in 1 as incriment value', () => {
+    const input = 1;
+    const output = calculateVotes(100, input);
+    const expected = 101;
+
+    expect(output).toBe(expected);
+  })
+  test('returns total votes incrimented by 3 when passed in 3 as incriment value', () => {
+    const input = 3;
+    const output = calculateVotes(100, input);
+    const expected = 103;
+
+    expect(output).toBe(expected);
+  })
+  test('returns total votes idecramented by 1 when passed in 1 as decrament value', () => {
+    const input = -1;
+    const output = calculateVotes(100, input);
+    const expected = 99
+
+    expect(output).toBe(expected);
+  })
+  test('returns total votes decramented by 3 when passed in 3 as decrament value', () => {
+    const input = -3;
+    const output = calculateVotes(100, input);
+    const expected = 97;
+
+    expect(output).toBe(expected);
+  })
+})
