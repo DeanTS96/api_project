@@ -159,3 +159,9 @@ describe('GET /api', () => {
         });
     })
 })
+
+describe('checkArticleExists()', () => {
+    test('returns an article from the database if it exists', () => {
+
+    })
+})

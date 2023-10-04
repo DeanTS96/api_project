@@ -11,16 +11,12 @@ function fetchCommentsById(params) {
 
 function addCommentByArticleId(comment, params) {
     if(!comment.body.length) return Promise.reject({status: 400, msg: 'empty comment'});
-    return db.query(`SELECT * FROM users WHERE username = $1`, [comment.username])
-    .then(({rows}) => {
-        if(!rows.length) return Promise.reject({status: 404, msg: 'user doesn\'t exist'})
-        return db.query(`SELECT * FROM articles WHERE article_id = $1`, [params.article_id])
-    })
+    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [params.article_id])
     .then(({rows}) => {
         if(!rows.length) return Promise.reject({status: 404, msg: 'article doesn\'t exist'});
         return db.query(`
-        INSERT INTO comments (body, author, created_at, article_id, votes)
-        VALUES ($1, $2, '${JSON.stringify(new Date(Date.now()))}', $3, 0) RETURNING *;
+        INSERT INTO comments (body, author, article_id)
+        VALUES ($1, $2, $3) RETURNING *;
         `, [comment.body, comment.username, params.article_id]);
     }).then(({rows: comment}) => {
         return comment[0];

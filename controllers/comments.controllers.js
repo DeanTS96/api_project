@@ -12,6 +12,7 @@ function postCommentByArticleId(req, res, next) {
     addCommentByArticleId(req.body, req.params).then(comment => {
         res.status(201).send({comment})
     }).catch(err => {
+        console.log(err);
         next(err);
     })
 }
