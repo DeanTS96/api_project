@@ -9,8 +9,10 @@ function getArticleById(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-    fetchArticles().then(articles => {
+    fetchArticles(req.query).then(articles => {
         res.status(200).send({articles});
+    }).catch(err => {
+        next(err);
     })
 }
 

@@ -187,6 +187,33 @@ describe('/api/articles', () => {
             })
         });
     })
+    test('200 GET/api/articles?topic=topic_query responds with 200 and an array of articles only associated with the specific topic', () => {
+        return request(app).get('/api/articles?topic=cats').expect(200).then(({body: articles}) => {
+            expect(articles.articles).toHaveLength(1);
+            articles.articles.forEach(article => {
+                expect(article).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: 'cats',
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                }))
+            })
+        });
+    })
+    test('200 GET/api/articles?topic=valid_topic_but_unassigned_to_any_articles responds with 200 and an empty array', () => {
+        return request(app).get('/api/articles?topic=paper').expect(200).then(({body: articles}) => {
+            expect(articles.articles).toHaveLength(0);
+        })
+    })
+    test('404 GET/api/articles?topic=topic_doesn\'t_exist responds with 404 topic doesn\'t exist', () => {
+        return request(app).get('/api/articles?topic=no_topic').expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('topic doesn\'t exist');
+        })
+    })
 })
 
 describe('/api/users', () => {
