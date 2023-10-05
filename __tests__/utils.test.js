@@ -105,7 +105,7 @@ describe("formatComments", () => {
   });
 });
 
-describe.only('calculateVotes()', () => {
+describe('calculateVotes()', () => {
   test('returns "+ 0" when passed in 0', () => {
     const input = 0;
     const output = calculateVotes(input);

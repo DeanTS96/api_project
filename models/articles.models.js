@@ -16,8 +16,7 @@ function fetchArticles() {
     })
 }
 
-function updateArticleById({article_id}, {inc_votes}) {
-    if(isNaN(inc_votes)) return Promise.reject({status: 400, msg: 'inc_votes must be a number'});
+function updateArticleById({article_id}, {inc_votes = 0}) {
     return db.query(`
     UPDATE articles
     SET votes = votes ${calculateVotes(inc_votes)}

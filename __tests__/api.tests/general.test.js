@@ -137,6 +137,20 @@ describe('/api/articles/:article_id', () => {
             }))
         });
     })
+    test('200: PATCH/api/articles/3 responds with 200 and the unchanged article when no inc_votes is specified', () => {
+        return request(app).patch('/api/articles/3').send({}).expect(200).then(({body: article}) => {
+            expect(article.article).toEqual(expect.objectContaining({
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: expect.any(String),
+                votes: 0,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+            }))
+        });
+    })
     test('404: PATCH/api/articles/99999 responds with 404 article doesn\'t exist', () => {
         return request(app).patch('/api/articles/99999').send({inc_votes: 1}).expect(404).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('article doesn\'t exist');
