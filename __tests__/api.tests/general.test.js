@@ -155,7 +155,7 @@ describe('DELETE /api/comments/comment_id', () => {
             expect(comment).toHaveLength(0);
         })
     })
-    test('204: DELETE/api/comments/out_of_range responds with status code 400 invalid id', () => {
+    test('204: DELETE/api/comments/no_comment_for_id responds with status code 204 and does nothing since comment already doesn\'t exist', () => {
         return request(app).delete('/api/comments/99999').expect(204)
     })
     test('400: DELETE/api/comments/invalid_id responds with status code 400 invalid id', () => {
