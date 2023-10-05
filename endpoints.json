@@ -15,23 +15,6 @@
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
-  },
-  "GET /api/articles": {
-    "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
-    "exampleResponse": {
-      "articles": [
-        {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": "2018-05-30T15:59:13.341Z",
-          "votes": 0,
-          "comment_count": 6
-        }
-      ]
-    }
   }, 
   "GET /api/articles/:article_id": {
     "description": "Serves a single requested article",
@@ -49,30 +32,6 @@
       }
     }
   },
-  "GET /api/articles/:article_id/comments": {
-    "description": "Serves all the comments on a specific article",
-    "queries": [],
-    "exampleResponse":  {
-      "comments": [
-        {
-          "comment_id": 11,
-          "body": "Ambidextrous marsupial",
-          "article_id": 3,
-          "author": "icellusedkars",
-          "votes": 0,
-          "created_at": "2020-09-19T23:10:00.000Z"
-        },
-        {
-          "comment_id": 10,
-          "body": "git push origin master",
-          "article_id": 3,
-          "author": "icellusedkars",
-          "votes": 0,
-          "created_at": "2020-06-20T07:24:00.000Z"
-        }
-      ]
-    }
-  }, 
   "GET /api/articles":{
     "description": "",
     "queries": [],
@@ -108,6 +67,65 @@
         "comment_count": "0"
       }
     ]
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Edits an article and returns the edited article",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 3,
+        "title": "Eight pug gifs that remind me of mitch",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "body": "some gifs",
+        "created_at": "2020-11-03T09:12:00.000Z",
+        "votes": 1,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Serves all the comments on a specific article",
+    "queries": [],
+    "exampleResponse":  {
+      "comments": [
+        {
+          "comment_id": 11,
+          "body": "Ambidextrous marsupial",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-09-19T23:10:00.000Z"
+        },
+        {
+          "comment_id": 10,
+          "body": "git push origin master",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-06-20T07:24:00.000Z"
+        }
+      ]
+    }
+  }, 
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment to an article and returns the comment",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 19,
+        "body": "nice",
+        "article_id": 3,
+        "author": "rogersop",
+        "votes": 0,
+        "created_at": "2023-10-05T14:21:20.220Z"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a comment and returns nothing",
+    "queries": [],
+    "exampleResponse": {}
   },
   "GET /api/users": {
     "description": "serves an array of all users",

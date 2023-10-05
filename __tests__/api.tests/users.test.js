@@ -9,7 +9,6 @@ afterAll(() => {
 describe('/api/users', () => {
     test('200: GET responds with 200 and all users', () => {
         return request(app).get('/api/users').expect(200).then(({body: users}) => {
-            console.log(users);
             expect(users.users).toHaveLength(4)
             users.users.forEach(user => {
                 expect(user).toEqual(expect.objectContaining({

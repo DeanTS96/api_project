@@ -10,6 +10,8 @@ const app = express();
 
 app.use(express.json());
 
+app.get('/api', getAPIDocs);
+
 app.get('/api/topics', getTopics);
 
 app.get('/api/articles', getArticles);
@@ -22,10 +24,7 @@ app.delete('/api/comments/:comment_id', deleteCommentById);
 
 app.get('/api/users', getUsers);
 
-app.get('/api', getAPIDocs);
-
 app.all('/*', (req, res, next) => {
-    console.log('my error')
     res.status(404).send({msg: 'Bad api endpoint'});
 })
 

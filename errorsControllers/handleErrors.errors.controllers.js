@@ -1,5 +1,4 @@
 function handleErrors(err, req, res, next) {
-    console.log(err);
     if(err.code === '22P02') {
         res.status(400).send({msg: 'invalid id'});
     }
@@ -13,7 +12,6 @@ function handleErrors(err, req, res, next) {
         res.status(400).send({msg: 'inc_votes must be a number'});
     } 
     else{ 
-        console.log('eorrur unhandles')
         res.status(500).send({msg: 'something went wrong :('})
     }
 }
