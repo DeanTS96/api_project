@@ -189,6 +189,25 @@ describe('/api/articles', () => {
     })
 })
 
+describe('DELETE /api/comments/comment_id', () => {
+    test('204: DELETE/api/comments/2 responds with status code 204 and deletes the comment', () => {
+        return request(app).delete('/api/comments/2').expect(204).then(() => {
+            return db.query(`
+            SELECT * FROM comments WHERE comment_id = 2`)
+        }).then(({rows: comment}) => {
+            expect(comment).toHaveLength(0);
+        })
+    })
+    test('204: DELETE/api/comments/no_comment_for_id responds with status code 204 and does nothing since comment already doesn\'t exist', () => {
+        return request(app).delete('/api/comments/99999').expect(204)
+    })
+    test('400: DELETE/api/comments/invalid_id responds with status code 400 invalid id', () => {
+        return request(app).delete('/api/comments/invalid_id').expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid id');
+        })
+    })
+})
+
 describe('GET /api', () => {
     test('Sends back 200 and the read json api file', () => {
         return request(app).get('/api').expect(200).then(({body}) => {
