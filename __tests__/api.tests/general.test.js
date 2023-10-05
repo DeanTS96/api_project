@@ -189,6 +189,21 @@ describe('/api/articles', () => {
     })
 })
 
+describe('/api/users', () => {
+    test('200: GET responds with 200 and all users', () => {
+        return request(app).get('/api/users').expect(200).then(({body: users}) => {
+            console.log(users);
+            expect(users.users).toHaveLength(4)
+            users.users.forEach(user => {
+                expect(user).toEqual(expect.objectContaining({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                }))
+            })
+        })
+    })
+})
 describe('DELETE /api/comments/comment_id', () => {
     test('204: DELETE/api/comments/2 responds with status code 204 and deletes the comment', () => {
         return request(app).delete('/api/comments/2').expect(204).then(() => {
