@@ -34,7 +34,7 @@
   },
   "GET /api/articles":{
     "description": "",
-    "queries": [],
+    "queries": ["sort_by", "order"],
     "exampleResponse":  [
       {
         "author": "rogersop",

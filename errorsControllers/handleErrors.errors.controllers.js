@@ -9,7 +9,7 @@ function handleErrors(err, req, res, next) {
         res.status(err.status).send({msg:err.msg});
     }
     else if(err.code = '42703') {
-        res.status(400).send({msg: 'inc_votes must be a number'});
+        res.status(400).send({msg: 'invalid query'});
     } 
     else{ 
         res.status(500).send({msg: 'something went wrong :('})

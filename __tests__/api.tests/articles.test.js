@@ -13,7 +13,7 @@ afterAll(() => {
 })
 
 describe('/api/articles', () => {
-    test('200: GET/api/articles responds with 200 and an arrray of all article objects', () => {
+    test('200: GET/api/articles responds with 200 and an arrray of all article objects, sorted by created_at by default', () => {
         return request(app).get('/api/articles').expect(200).then(({body: articles}) => {
             expect(articles.articles).toHaveLength(13);
             expect(articles.articles).toBeSortedBy('created_at',{descending: true})
@@ -56,6 +56,16 @@ describe('/api/articles', () => {
     test('404: GET/api/articles?topic=topic_doesn\'t_exist responds with 404 topic doesn\'t exist', () => {
         return request(app).get('/api/articles?topic=no_topic').expect(404).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('topic doesn\'t exist');
+        })
+    })
+    test('200: GET/api/articles?sort_by=votes&&order=asc responds with 200 and an arrray of all article objects, sorted by votes and ordered by the least votes first', () => {
+        return request(app).get('/api/articles?sort_by=votes&&order=asc').expect(200).then(({body: articles}) => {
+            expect(articles.articles).toBeSortedBy('votes');
+        })
+    })
+    test('400: GET/api/articles?sort_by=votes&&order=invalid_sort_by responds with 400 invalid query', () => {
+        return request(app).get('/api/articles?sort_by=invalid_sort_by&&order=asc').expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid query');
         })
     })
 })

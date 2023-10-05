@@ -15,6 +15,17 @@ function fetchArticleById(params) {
 function fetchArticles(queries) {
     const promiseAllArray = [];
     const values = [];
+    const sortByOrder = queries.order === 'asc' ? 'ASC': 'DESC';
+    const validSortBys = {
+        article_id: 'article_id',
+        title: 'title',
+        topic: 'topic',
+        author: 'author',
+        created_at: 'created_at',
+        votes: 'votes',
+        comment_count: 'comment_count',
+    }
+    const sortBy = queries.sort_by || 'created_at';
     let query = `
     SELECT a.author, a.title, a.article_id, a.topic, a.created_at, a.votes, a.article_img_url, COUNT(c.comment_id) AS comment_count 
     FROM articles a
@@ -24,7 +35,7 @@ function fetchArticles(queries) {
         query += ` WHERE a.topic = $${values.length}`;
         promiseAllArray.push(db.query(`SELECT * FROM topics WHERE slug = $1;`, [queries.topic]))
     }
-    query += ` GROUP BY a.article_id ORDER BY a.created_at DESC;`;
+    query += ` GROUP BY a.article_id ORDER BY ${validSortBys[sortBy]} ${sortByOrder};`;
     promiseAllArray.push(db.query(query, values));
     return Promise.all(promiseAllArray)
     .then((promiseAllResponse) => {
