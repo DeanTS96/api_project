@@ -20,3 +20,21 @@ describe('/api/users', () => {
         })
     })
 })
+
+describe('/api/users/:username', () => {
+    test('200: GET /api/users/rogersop responds with status 200 and rogersop user object', () => {
+        return request(app).get('/api/users/rogersop').expect(200).then(({body: user}) => {
+            console.log(user)
+            expect(user.user).toEqual(expect.objectContaining({
+                username: 'rogersop',
+                name: 'paul',
+                avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+            }))
+        })
+    })
+    test('404: GET /api/users/user_doesn\'t_exist respondds with 404 user doesn\'t exist', () => {
+        return request(app).get('/api/users/user_doesn\'t_exist').expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('user doesn\'t exist');
+        })
+    })
+})
