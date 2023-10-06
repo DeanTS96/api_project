@@ -6,8 +6,8 @@ afterAll(() => {
     db.end();
 })
 
-describe('/api/users', () => {
-    test('200: GET responds with 200 and all users', () => {
+describe('GET /api/users', () => {
+    test('200: responds with 200 and all users', () => {
         return request(app).get('/api/users').expect(200).then(({body: users}) => {
             expect(users.users).toHaveLength(4)
             users.users.forEach(user => {
@@ -21,8 +21,8 @@ describe('/api/users', () => {
     })
 })
 
-describe('/api/users/:username', () => {
-    test('200: GET /api/users/rogersop responds with status 200 and rogersop user object', () => {
+describe('GET /api/users/:username', () => {
+    test('200: /api/users/rogersop responds with status 200 and rogersop user object', () => {
         return request(app).get('/api/users/rogersop').expect(200).then(({body: user}) => {
             console.log(user)
             expect(user.user).toEqual(expect.objectContaining({
@@ -32,7 +32,7 @@ describe('/api/users/:username', () => {
             }))
         })
     })
-    test('404: GET /api/users/user_doesn\'t_exist respondds with 404 user doesn\'t exist', () => {
+    test('404: /api/users/user_doesn\'t_exist respondds with 404 user doesn\'t exist', () => {
         return request(app).get('/api/users/user_doesn\'t_exist').expect(404).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('user doesn\'t exist');
         })

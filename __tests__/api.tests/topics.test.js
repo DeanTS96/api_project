@@ -6,8 +6,8 @@ afterAll(() => {
     db.end();
 })
 
-describe('/api/topics', () => {
-    test('200: GET/api/topics returns with status code 200 and all the topics', () => {
+describe('GET /api/topics', () => {
+    test('200: /api/topics returns with status code 200 and all the topics', () => {
         return request(app).get('/api/topics').expect(200).then(({body: topics}) => {
             topics.forEach(topic => {
                 expect(topic).toEqual(expect.objectContaining({
