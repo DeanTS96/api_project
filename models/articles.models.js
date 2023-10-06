@@ -60,6 +60,24 @@ function updateArticleById({article_id}, {inc_votes = 0}) {
     })
 }
 
-module.exports = {fetchArticleById, fetchArticles, updateArticleById};
+function addArticle(article) {
+    return db.query(`
+    SELECT * FROM topics WHERE slug = $1`, [article.topic]).then(({rows: topic}) => {
+        if(!topic.length) return Promise.reject({status: 404, msg: 'topic doesn\'t exist'});
+        return db.query(`
+        INSERT INTO articles 
+        (author, title, body, topic, article_img_url)
+        VALUES
+        ($1, $2, $3, $4, $5)
+        RETURNING *;
+        `, [article.author, article.title, article.body, article.topic, article.article_img_url])
+    })
+    .then(({rows: article}) => {
+        article[0].comment_count = 0;
+        return article[0];
+    })
+}
+
+module.exports = {fetchArticleById, fetchArticles, updateArticleById, addArticle};
 
 

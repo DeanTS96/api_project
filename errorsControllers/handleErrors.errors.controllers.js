@@ -9,7 +9,7 @@ function handleErrors(err, req, res, next) {
         res.status(err.status).send({msg:err.msg});
     }
     else if(err.code = '42703') {
-        res.status(400).send({msg: 'invalid query'});
+        res.status(400).send({msg: 'invalid data'});
     } 
     else{ 
         res.status(500).send({msg: 'something went wrong :('})

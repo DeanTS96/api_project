@@ -63,9 +63,9 @@ describe('GET /api/articles', () => {
             expect(articles.articles).toBeSortedBy('votes');
         })
     })
-    test('400: /api/articles?sort_by=votes&&order=invalid_sort_by responds with 400 invalid query', () => {
+    test('400: /api/articles?sort_by=votes&&order=invalid_sort_by responds with 400 invalid data', () => {
         return request(app).get('/api/articles?sort_by=invalid_sort_by&&order=asc').expect(400).then(({body: errResponse}) => {
-            expect(errResponse.msg).toBe('invalid query');
+            expect(errResponse.msg).toBe('invalid data');
         })
     })
 })
@@ -142,6 +142,43 @@ describe('PATCH /api/articles/:article_id', () => {
     test('400: /api/articles/3 with bad inc_votes value responds with 400 inc_votes must be a number', () => {
         return request(app).patch('/api/articles/invalid_id').send({inc_votes: 'invalid_value'}).expect(400).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('inc_votes must be a number');
+        })
+    })
+})
+
+describe('POST /api/articles', () => {
+    test('201: /api/articles responds with tatus 201 and the created article', () => {
+        const articleToSend = {author: 'rogersop', title: 'rogersops title', body: 'rogersops body', topic: 'cats', article_img_url: 'https://images.fake_image.png'};
+        return request(app).post('/api/articles').send(articleToSend).expect(201).then(({body: article}) => {
+            expect(article.article).toEqual(expect.objectContaining({
+                article_id: expect.any(Number),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                author: 'rogersop', 
+                title: 'rogersops title', 
+                body: 'rogersops body', 
+                topic: 'cats', 
+                article_img_url: 'https://images.fake_image.png',
+                comment_count: 0
+            }))
+        });
+    })
+    test('400: /api/articles responds with 400 invalid data when NOT NULL data is missing', () => {
+        const articleToSend = {author: 'rogersop', body: 'rogersops body', topic: 'cats', article_img_url: 'https://images.fake_image.png'};
+        return request(app).post('/api/articles').send(articleToSend).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid data');
+        })
+    })
+    test('404: /api/articles responds with 404 user doesn\'t exist when author doesn\'t exist', () => {
+        const articleToSend = {author: 'user_doesn\'t_exist', title: 'rogersops title', body: 'rogersops body', topic: 'cats', article_img_url: 'https://images.fake_image.png'};
+        return request(app).post('/api/articles').send(articleToSend).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('user doesn\'t exist');
+        })
+    })
+    test('404: /api/articles responds with 404 topic doesn\'t exist when topic doesn\'t exist', () => {
+        const articleToSend = {author: 'rogersop', title: 'rogersops title', body: 'rogersops body', topic: 'topic_doesn\'t exist', article_img_url: 'https://images.fake_image.png'};
+        return request(app).post('/api/articles').send(articleToSend).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('topic doesn\'t exist');
         })
     })
 })
