@@ -140,7 +140,7 @@ describe('PATCH /api/articles/:article_id', () => {
         })
     })
     test('400: /api/articles/3 with bad inc_votes value responds with 400 inc_votes must be a number', () => {
-        return request(app).patch('/api/articles/invalid_id').send({inc_votes: 'hello'}).expect(400).then(({body: errResponse}) => {
+        return request(app).patch('/api/articles/invalid_id').send({inc_votes: 'invalid_value'}).expect(400).then(({body: errResponse}) => {
             expect(errResponse.msg).toBe('inc_votes must be a number');
         })
     })

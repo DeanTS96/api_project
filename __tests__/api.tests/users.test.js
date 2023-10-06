@@ -24,7 +24,6 @@ describe('GET /api/users', () => {
 describe('GET /api/users/:username', () => {
     test('200: /api/users/rogersop responds with status 200 and rogersop user object', () => {
         return request(app).get('/api/users/rogersop').expect(200).then(({body: user}) => {
-            console.log(user)
             expect(user.user).toEqual(expect.objectContaining({
                 username: 'rogersop',
                 name: 'paul',

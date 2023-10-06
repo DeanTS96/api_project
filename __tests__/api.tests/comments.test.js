@@ -99,3 +99,57 @@ describe('DELETE /api/comments/comment_id', () => {
         })
     })
 })
+
+describe('PATCH /api/comments/comment_id', () => {
+    test('200: /api/comments/1 responds with status 200 and the updated comment incremented by the positive value', () => {
+        return request(app).patch('/api/comments/1').send({inc_votes: 2}).expect(200).then(({body: comment}) => {
+            expect(comment.comment).toEqual(expect.objectContaining({
+                comment_id: 1,
+                body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: 'butter_bridge',
+                votes: 18,
+                created_at: '2020-04-06T12:17:00.000Z'
+            }))
+        })
+    })
+    test('200: /api/comments/1 responds with status 200 and the updated comment decramented by the negative value', () => {
+        return request(app).patch('/api/comments/1').send({inc_votes: -3}).expect(200).then(({body: comment}) => {
+            expect(comment.comment).toEqual(expect.objectContaining({
+                comment_id: 1,
+                body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: 'butter_bridge',
+                votes: 13,
+                created_at: '2020-04-06T12:17:00.000Z'
+            }))
+        })
+    })
+    test('200: /api/comments/1 responds with status 200 and unchanged comment when no value is passed', () => {
+        return request(app).patch('/api/comments/1').send({}).expect(200).then(({body: comment}) => {
+            expect(comment.comment).toEqual(expect.objectContaining({
+                comment_id: 1,
+                body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: 'butter_bridge',
+                votes: 16,
+                created_at: '2020-04-06T12:17:00.000Z'
+            }))
+        })
+    })
+    test('404: /api/comments/99999 responds with status 404 comment doesn\'t exist', () => {
+        return request(app).patch('/api/comments/99999').send({inc_votes: -3}).expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('comment doesn\'t exist');
+        })
+    })
+    test('400: /api/comments/invaalid_id responds with 400 invalid id', () => {
+        return request(app).patch('/api/comments/invalid_id').send({inc_votes: -3}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid id');
+        })
+    })
+    test('400: /api/comments/1 send with an invalid inc_votes value responds with 400 inc_votes must be a number', () => {
+        return request(app).patch('/api/comments/invalid_id').send({inc_votes: 'invalid_value'}).expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('inc_votes must be a number');
+        })
+    })
+})
