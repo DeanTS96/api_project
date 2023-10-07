@@ -1,7 +1,7 @@
 const {fetchCommentsById, addCommentByArticleId, removeCommentById, updateCommentById} = require('../models/comments.models')
 
 function getCommentsById(req, res, next) {
-    fetchCommentsById(req.params).then((comments) => {
+    fetchCommentsById(req.params, req.query).then((comments) => {
         res.status(200).send({comments})
     }).catch(err => {
         next(err);

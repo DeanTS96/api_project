@@ -34,16 +34,26 @@ function fetchArticles(queries) {
         values.push(queries.topic)
         query += ` WHERE a.topic = $${values.length}`;
         promiseAllArray.push(db.query(`SELECT * FROM topics WHERE slug = $1;`, [queries.topic]))
-    }
-    query += ` GROUP BY a.article_id ORDER BY ${validSortBys[sortBy]} ${sortByOrder};`;
+        promiseAllArray.push(db.query('SELECT COUNT(*) FROM articles WHERE topic = $1', [queries.topic]));
+    } else promiseAllArray.push(db.query('SELECT COUNT(*) FROM articles'));
+    const limit = queries.limit || '10'
+    values.push(limit);
+    const page = queries.p || '1';
+    query += ` 
+    GROUP BY a.article_id 
+    ORDER BY ${validSortBys[sortBy]} ${sortByOrder}
+    LIMIT $${values.length}
+    OFFSET ${limit * (page - 1)};`;
+    
     promiseAllArray.push(db.query(query, values));
     return Promise.all(promiseAllArray)
     .then((promiseAllResponse) => {
-        if(promiseAllResponse.length === 2) {
+        if(promiseAllResponse.length === 3) {
             if(!promiseAllResponse[0].rows.length) return Promise.reject({status: 404, msg: 'topic doesn\'t exist'});
         }
+        const totalArticles = promiseAllResponse[promiseAllResponse.length-2].rows;
         const articles = promiseAllResponse[promiseAllResponse.length-1].rows;
-        return articles;
+        return {totalArticles: totalArticles[0].count, articles};
     })
 }
 

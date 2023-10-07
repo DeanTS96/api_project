@@ -13,10 +13,30 @@ afterAll(() => {
 })
 
 describe('GET /api/articles', () => {
-    test('200: /api/articles responds with 200 and an arrray of all article objects, sorted by created_at by default', () => {
+    test('200: /api/articles responds with 200 and an arrray of all article objects, sorted by created_at by default and limited to 10 results', () => {
         return request(app).get('/api/articles').expect(200).then(({body: articles}) => {
-            expect(articles.articles).toHaveLength(13);
+            expect(articles.articles).toHaveLength(10);
             expect(articles.articles).toBeSortedBy('created_at',{descending: true})
+            expect(articles.totalArticles).toBe("13");
+            articles.articles.forEach(article => {
+                expect(article).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                }))
+            })
+        });
+    })
+    test('200: /api/articles?limit=10&p=2 responds with 200 and an arrray of all article objects, starting form the 6th article and only showing the next 5', () => {
+        return request(app).get('/api/articles?limit=10&p=1').expect(200).then(({body: articles}) => {
+            expect(articles.articles).toHaveLength(10);
+            expect(articles.articles).toBeSortedBy('created_at',{descending: true});
+            expect(articles.totalArticles).toBe("13");
             articles.articles.forEach(article => {
                 expect(article).toEqual(expect.objectContaining({
                     author: expect.any(String),
@@ -34,6 +54,7 @@ describe('GET /api/articles', () => {
     test('200: /api/articles?topic=topic_query responds with 200 and an array of articles only associated with the specific topic', () => {
         return request(app).get('/api/articles?topic=cats').expect(200).then(({body: articles}) => {
             expect(articles.articles).toHaveLength(1);
+            expect(articles.totalArticles).toBe("1");
             articles.articles.forEach(article => {
                 expect(article).toEqual(expect.objectContaining({
                     author: expect.any(String),
@@ -53,14 +74,24 @@ describe('GET /api/articles', () => {
             expect(articles.articles).toHaveLength(0);
         })
     })
-    test('404: /api/articles?topic=topic_doesn\'t_exist responds with 404 topic doesn\'t exist', () => {
-        return request(app).get('/api/articles?topic=no_topic').expect(404).then(({body: errResponse}) => {
-            expect(errResponse.msg).toBe('topic doesn\'t exist');
-        })
-    })
     test('200: /api/articles?sort_by=votes&&order=asc responds with 200 and an arrray of all article objects, sorted by votes and ordered by the least votes first', () => {
         return request(app).get('/api/articles?sort_by=votes&&order=asc').expect(200).then(({body: articles}) => {
             expect(articles.articles).toBeSortedBy('votes');
+        })
+    })
+    test('400: /api/articles?limit=10&p=invalid_page responds with 400 invalid data', () => {
+        return request(app).get('/api/articles?limit=10&p=invalid_page').expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid data');
+        })
+    })
+    test('400: /api/articles?limit=invalid_limit&p=2 responds with 400 invalid data', () => {
+        return request(app).get('/api/articles?limit=10&p=invalid_page').expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid data');
+        })
+    })
+    test('404: /api/articles?topic=topic_doesn\'t_exist responds with 404 topic doesn\'t exist', () => {
+        return request(app).get('/api/articles?topic=no_topic').expect(404).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('topic doesn\'t exist');
         })
     })
     test('400: /api/articles?sort_by=votes&&order=invalid_sort_by responds with 400 invalid data', () => {

@@ -13,7 +13,7 @@ afterAll(() => {
 })
 
 describe('GET /api/articles/:article_id/comments', () => {
-    test('200: /api/articles/:article_id/comments responds status 200 with an array of comment objects for a specific article, ordered last comment first', () => {
+    test('200: /api/articles/:article_id/comments responds status 200 with an array of comment objects for a specific article, ordered last comment first limit to 10 by default', () => {
         return request(app).get('/api/articles/3/comments').expect(200).then(({body: comments}) => {
             expect(comments.comments).toHaveLength(2);
             expect(comments.comments).toBeSortedBy('created_at', {descending: true});
@@ -22,6 +22,22 @@ describe('GET /api/articles/:article_id/comments', () => {
                     comment_id: expect.any(Number),
                     body: expect.any(String),
                     article_id: 3,
+                    author: expect.any(String),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String)
+                }))
+            })
+        });
+    })
+    test('200: /api/articles/:article_id/comments?limit=10&p=2 responds status 200 with an array of comment objects ordered last comment first, limited to 10 and showing the scond page', () => {
+        return request(app).get('/api/articles/1/comments?limit=10&p=2').expect(200).then(({body: comments}) => {
+            expect(comments.comments).toHaveLength(1);
+            expect(comments.comments).toBeSortedBy('created_at', {descending: true});
+            comments.comments.forEach(comment => {
+                expect(comment).toEqual(expect.objectContaining({
+                    comment_id: expect.any(Number),
+                    body: expect.any(String),
+                    article_id: 1,
                     author: expect.any(String),
                     votes: expect.any(Number),
                     created_at: expect.any(String)
@@ -42,6 +58,16 @@ describe('GET /api/articles/:article_id/comments', () => {
     test('400: /api/articles/invalid_article_id/comments responds with 400 invalid id', () => {
         return request(app).get('/api/articles/invalid_id/comments').expect(400).then(({body: errResponse})=> {
             expect(errResponse.msg).toBe('invalid id')
+        })
+    })
+    test('400: /api/articles/1/comments?limit=10&p=invalid_page responds with 400 invalid data', () => {
+        return request(app).get('/api/articles/1/comments?limit=10&p=invalid_page').expect(400).then(({body: errResponse})=> {
+            expect(errResponse.msg).toBe('invalid data')
+        })
+    })
+    test('400: /api/articles/1/comments?limit=invalid_limit&p=1 responds with 400 invalid data', () => {
+        return request(app).get('/api/articles/1/comments?limit=invalid_limit&p=1').expect(400).then(({body: errResponse})=> {
+            expect(errResponse.msg).toBe('invalid data')
         })
     })
 })
