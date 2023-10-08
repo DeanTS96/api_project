@@ -213,3 +213,22 @@ describe('POST /api/articles', () => {
         })
     })
 })
+
+describe('DELETE /api/articles/:article_id', () => {
+    test('204: /api/articles/1 responds with status 204 and no content, showing the article was deleted', () => {
+        return request(app).delete('/api/articles/1').expect(204).then(() => {
+            return db.query(`
+            SELECT * FROM comments WHERE article_id = 1`)
+        }).then(({rows: comments}) => {
+            expect(comments).toHaveLength(0);
+        })
+    })
+    test('204: /api/articles/no_article_on_id responds with status code 204 and does nothing since article already doesn\'t exist', () => {
+        return request(app).delete('/api/articles/99999').expect(204);
+    })
+    test('400: /api/articles/invalid_id responds with status code 400 invalid id', () => {
+        return request(app).delete('/api/articles/invalid_id').expect(400).then(({body: errResponse}) => {
+            expect(errResponse.msg).toBe('invalid id');
+        })
+    })
+})

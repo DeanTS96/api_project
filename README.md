@@ -5,6 +5,7 @@ https://news-api-9k2x.onrender.com
 A news api allowing users to use CRUD (Create, Read, Update, Delete) operations to interact with the database
 
 ## Setup
+Must be on node v20.5.0 or later and psql version 14.9 or later
 
 1.  Clone the repo.
 ----

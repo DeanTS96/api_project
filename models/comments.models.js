@@ -1,7 +1,7 @@
 const db = require('../db/connection');
 const articleExistsString = 'SELECT * FROM articles WHERE article_id = $1';
 
-function fetchCommentsById(params, queries) {
+function fetchCommentsByArticleId(params, queries) {
     const checkArticleExists = db.query(articleExistsString, [params.article_id]);
     const limit = queries.limit || '10';
     const page = queries.p || '1';
@@ -48,4 +48,4 @@ function updateCommentById({comment_id}, {inc_votes = 0}) {
     })
 }
 
-module.exports = {fetchCommentsById, addCommentByArticleId, removeCommentById, updateCommentById};
+module.exports = {fetchCommentsByArticleId, addCommentByArticleId, removeCommentById, updateCommentById};

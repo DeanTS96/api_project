@@ -74,6 +74,11 @@
       }
     ]
   },
+  "DELETE /api/articles/:article_id": {
+    "description": "Removes an article and all it's related comments",
+    "queries": [],
+    "exampleResponse":  {}
+  },
   "PATCH /api/articles/:article_id": {
     "description": "Edits an article and returns the edited article",
     "queries": [],
