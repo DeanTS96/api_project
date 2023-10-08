@@ -15,7 +15,13 @@
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
-  }, 
+  },  "POST /api/topics": {
+    "description": "Adds a topic to the database",
+    "queries": [],
+    "exampleResponse": {
+      "topic": { "slug": "basketball", "description": "Hoops!" }
+    }
+  },
   "GET /api/articles/:article_id": {
     "description": "Serves a single requested article",
     "queries": [],
@@ -33,8 +39,8 @@
     }
   },
   "GET /api/articles":{
-    "description": "",
-    "queries": ["sort_by", "order"],
+    "description": "returns an array of all articles",
+    "queries": ["sort_by", "order", "limit", "p"],
     "exampleResponse":  [
       {
         "author": "rogersop",
@@ -103,7 +109,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "Serves all the comments on a specific article",
-    "queries": [],
+    "queries": ["limit", "offset"],
     "exampleResponse":  {
       "comments": [
         {

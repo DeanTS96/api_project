@@ -6,4 +6,14 @@ function fetchTopics() {
     })
 }
 
-module.exports = {fetchTopics};
+function addTopic({slug, description}) {
+    return db.query(`
+    INSERT INTO topics (slug, description)
+    VALUES ($1, $2)
+    RETURNING *;
+    `, [slug, description]).then(({rows: topic}) => {
+        return topic[0];
+    })
+}
+
+module.exports = {fetchTopics, addTopic};
